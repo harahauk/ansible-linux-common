@@ -1,0 +1,37 @@
+---
+# defaults file for ansible-linux-common
+
+packages:
+  base:
+    common:
+    - cronyd
+    - gpg
+    - fail2ban #FIXME: Evaluate alternatives
+    - tar
+    rhel:
+    - epel-release #FIXME: Oracle Linux and Fedora
+    - python3-firewall
+    - firewalld
+    debian:
+    - acl
+  tty:
+    common:
+    - screen
+    - git # git-core on some systems?
+    rhel:
+    - vim-enhanced
+    debian:
+    - vim #FIXME check if not library heavy
+  extra:
+    common:
+    - mlocate
+    - lsof
+    - pciutils
+    - unzip
+    - git
+    - ccze
+    - bind-utils
+    rhel:
+    - redhat-lsb-core
+    #- yum-utils
+    #- dnf-utils
