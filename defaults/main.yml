@@ -33,7 +33,7 @@ packages:
     - git
     - ccze
     - bind-utils
-    rhel:
-    - redhat-lsb-core
+      #rhel:
+    #- redhat-lsb-core # FIXME: Move to the roles that depend on it
     #- yum-utils
     #- dnf-utils
