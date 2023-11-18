@@ -1,0 +1,90 @@
+---
+# tasks file for ansible-linux-common
+
+- name: "Install packages for RHEL-based OS"
+  package:
+      name: "{{ packages.base.rhel }}"
+      state: present
+  become: True
+  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+
+- name: "Install packages for Debian-based OS"
+  package:
+      name: "{{ packages.base.debian }}"
+      state: present
+      update_cache: True #TODO: Check if neccesary
+  become: True
+  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+
+- name: "Install packages common for all hosts"
+  package:
+      name: "{{ packages.base.common }}"
+      state: present
+  become: True
+
+- name: "Set the timezone"
+  timezone:
+    name: "{{ default_timezone }}" #FIXME Set to system running the role?
+  become: True
+
+#TODO:
+#- name: "Configure NTP using chronyd"
+#- name: Create a sudo user
+#- name: Create a ansible user
+
+    #- name: "Copy fail2ban config"
+    #  copy:
+    #      src: "fail2ban.jail.local"
+    #      dest: "/etc/fail2ban/jail.local"
+    #      owner: root
+    #      group: root
+    #      mode: 660
+    #  become: True
+    #  notify: "Restart fail2ban"
+    #
+    #- name: "Enable fail2ban service"
+    #  service:
+    #      name: "fail2ban"
+    #      state: "started"
+    #      enabled: "True"
+    #  become: True
+    #  notify: "Restart fail2ban"
+    #  ignore_errors: True # System might not have SSH
+    #- name: "Create user"
+    #  user:
+    #    name: "{{ user }}"
+    #    state: "present"
+    #  become: True
+
+# TODO: Move to personaliztion role
+    #- name: "Deploy dotfiles"
+    #  git:
+    #    repo: "https://github.com/harahauk/dotfiles.git"
+    #    dest: "/home/{{ user }}/.config/dotfiles"
+    #    recursive: yes
+    #    accept_hostkey: yes
+    #  become: True
+    #  become_user: "{{ user }}"
+    #
+    #- name: "Symlink dotfiles"
+    #  file:
+    #    src: "/home/{{ user }}/.config/dotfiles/{{ item }}"
+    #    dest: "/home/{{ user }}/{{ item }}"
+    #    state: link
+    #    force: yes
+    #  with_items:
+    #    - ".vim"
+    #    - ".vimrc"
+    #    - ".screenrc"
+    #    - ".bashrc"
+    #  become: True
+    #  become_user: "{{ user }}"
+    #
+    #- name: "Symlink bashrc to bash_profile"
+    #  file:
+    #      src: "/home/{{ user }}/.config/dotfiles/.bashrc"
+    #      dest: "/home/{{ user }}/.bash_profile"
+    #      state: link
+    #      force: yes
+    #  become: True
+    #  become_user: "{{ user }}"
