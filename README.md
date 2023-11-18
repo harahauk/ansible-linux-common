@@ -5,13 +5,16 @@ ansible-linux-common
 - Dev
 ```
 
-This is [Ansible](https://www.ansible.com/)-role which provides baseline of configuration to *nix-based systems.
+This is an [Ansible](https://www.ansible.com/)-role which provides baseline of configuration to *nix-based systems.
 It is currently not compliant with any security profiles, and adheres to the authors preferences only.
+While this role is not production ready it is designed to be so in the future.
 
 Requirements
 ------------
 
 Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+
+- ansible-galaxy collection install community.general
 
 Role Variables
 --------------
