@@ -10,10 +10,11 @@ packages:
     - gpg
     - fail2ban #FIXME: Evaluate alternatives
     - tar
-    rhel:
-    - epel-release #FIXME: Oracle Linux and Fedora
+    rh_common:
     - python3-firewall
     - firewalld
+    rhel:
+    - epel-release #FIXME: Oracle Linux and Fedora
     debian:
     - acl
   tty:

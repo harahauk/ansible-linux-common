@@ -27,6 +27,7 @@ Dependencies
 xor:
   - Red Hat Linux 9
   - AlmaLinux 9
+  - Fedora 38
 
 Example Playbook
 ----------------

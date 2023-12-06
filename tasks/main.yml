@@ -3,10 +3,17 @@
 
 - name: "Install packages for RHEL-based OS"
   package:
-      name: "{{ packages.base.rhel }}"
+      name: "{{ packages.base.rh_common }}"
       state: present
   become: True
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+
+- name: "Install packages for RHEL (not the testing distributions)"
+  package:
+      name: "{{ packages.base.rhel }}"
+      state: present
+  become: True
+  when: "(ansible_os_family == 'RedHat') and not (ansible_distribution == 'Fedora')"
 
 - name: "Install packages for Debian-based OS"
   package:
