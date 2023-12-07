@@ -6,15 +6,18 @@ ansible-linux-common
 ```
 
 This is an [Ansible](https://www.ansible.com/)-role which provides baseline of configuration to *nix-based systems.
-It is currently not compliant with any security profiles, and adheres to the authors preferences only.
+The goal is to leave a functioning and hardened system to which build your other ansible roles on.
+This role is currently not compliant with any security profiles, and adheres to the authors preferences only.
 While this role is not production ready it is designed to be so in the future.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
-
-- ansible-galaxy collection install community.general
+You need ansible installed and also the community general modules which might or migh not be preinstalled with your ansible-distribution.
+Run this command to make sure:
+´´´
+ansible-galaxy collection install community.general
+´´´
 
 Role Variables
 --------------
@@ -23,8 +26,13 @@ A description of the settable variables for this role should go here, including 
 
 Dependencies
 ------------
+This role might "work" on a wide range of Linux-distributions, but below are the distros that are actually tested.
+Now lets define "working" as that running this role on a system might leave it better off than not running
+this role, but makes no presumtions to do good hardening or setup of that system.
+
 
 xor:
+  - Debian 12 "Bookworm"
   - Red Hat Linux 9
   - AlmaLinux 9
   - Fedora 38
@@ -36,7 +44,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - common
+         - common # Change to the folder you checked this role out to
          - { role: username.rolename, x: 42 }
 
 License

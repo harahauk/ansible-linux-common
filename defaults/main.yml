@@ -21,7 +21,7 @@ packages:
     common:
     - screen
     - git # git-core on some systems?
-    rhel:
+    rh_common:
     - vim-enhanced
     debian:
     - vim #FIXME check if not library heavy

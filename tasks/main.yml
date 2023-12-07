@@ -29,6 +29,27 @@
       state: present
   become: True
 
+- name: "Install packages for RHEL-hosts that use interactive shell"
+  package:
+      name: "{{ packages.tty.rh_common }}"
+      state: present
+  become: True
+  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+
+- name: "Install packages for Debian-hosts that use interactive shell"
+  package:
+      name: "{{ packages.tty.debian }}"
+      state: present
+  become: True
+  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+
+- name: "Install packages for all hosts that use interactive shell"
+  package:
+      name: "{{ packages.tty.common }}"
+      state: present
+  become: True
+  #when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+
 - name: "Set the timezone"
   timezone:
     name: "{{ default_timezone }}" #FIXME Set to system running the role?
