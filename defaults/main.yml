@@ -3,6 +3,13 @@
 
 default_timezone: "Europe/Oslo"
 
+#TODO: Leaving blank disables NTP configuration
+ntp_time_servers: | # This is ideally your own NTP service for your datacenter
+  server 0.no.pool.ntp.org iburst
+  server 1.no.pool.ntp.org iburst
+  server 2.no.pool.ntp.org iburst
+  server 3.no.pool.ntp.org iburst
+
 packages:
   base:
     common:

@@ -7,4 +7,9 @@
     state: "restarted"
     daemon_reload: True
   become: True
-  #ignore_errors: True
+
+- name: "Restart chronyd"
+  service:
+    name: "chronyd"
+    state: "restarted"
+  become: True

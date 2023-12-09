@@ -1,6 +1,8 @@
 ---
 # tasks file for ansible-linux-common
 
+# vim:ts=2:sw=2
+
 - name: "Install packages for RHEL-based OS"
   package:
       name: "{{ packages.base.rh_common }}"
@@ -55,8 +57,60 @@
     name: "{{ default_timezone }}" #FIXME Set to system running the role?
   become: True
 
+# If this is a virtualized system time is most likely managed by the hypervisor
+- name: "Check if system is virtualized"
+  command:
+    cmd: "systemd-detect-virt"
+  become: True
+  changed_when: False
+  register: is_virtual_output
+
+- set_fact: # Focusing on LXC for now, had no problems with KVM
+    is_not_virtualized: "'lxc' not in is_virtual_output.stdout"
+
+#TODO: Check if NTP already configured
+- name: "Configure Chronyd (NTP) with timesync servers"
+  check_mode: True
+  register: chrony_already_configured_check
+  blockinfile:
+    path: "/etc/chrony.conf"
+    insertafter: "^(#)?pool.*"
+    block: "{{ ntp_time_servers }}"
+  become: True
+  notify: "Restart chronyd"
+  when: is_not_virtualized
+
+- set_fact: # Check if we did the changes in a prior sweep
+    chrony_not_already_configured: "{{ chrony_already_configured_check.changed }}"
+
+- name: "Comment out lines starting with 'pool' or 'server'"
+  lineinfile:
+    path: "/etc/chrony.conf"
+    regexp: '^(pool.*|server.*)'
+    line: '#\1'
+    backrefs: True
+  become: True
+  notify: "Restart chronyd"
+  when: is_not_virtualized and chrony_not_already_configured
+
+- name: "Configure Chronyd (NTP) with timesync servers"
+  blockinfile:
+    path: "/etc/chrony.conf"
+    insertafter: "^(#)?pool.*"
+    block: "{{ ntp_time_servers }}"
+  become: True
+  notify: "Restart chronyd"
+  when: is_not_virtualized and chrony_not_already_configured
+
+- name: "Start and enable chronyd (NTP)"
+  service:
+    name: "chronyd"
+    state: started
+    enabled: True
+  become: True
+  when: is_not_virtualized and chrony_not_already_configured
+
 #TODO:
-#- name: "Configure NTP using chronyd"
 #- name: Create a sudo user
 #- name: Create a ansible user
 
