@@ -63,17 +63,24 @@
     cmd: "systemd-detect-virt"
   become: True
   changed_when: False
+  failed_when: False # Returns false if no virtualization found
   register: is_virtual_output
 
 - set_fact: # Focusing on LXC for now, had no problems with KVM
     is_not_virtualized: "'lxc' not in is_virtual_output.stdout"
+    chrony_config: "/etc/chrony.conf"
+
+- set_fact:
+    chrony_config: "/etc/chrony/chrony.conf"
+  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+
 
 #TODO: Check if NTP already configured
 - name: "Configure Chronyd (NTP) with timesync servers"
   check_mode: True
   register: chrony_already_configured_check
   blockinfile:
-    path: "/etc/chrony.conf"
+    path: "{{ chrony_config }}"
     insertafter: "^(#)?pool.*"
     block: "{{ ntp_time_servers }}"
   become: True
@@ -85,7 +92,7 @@
 
 - name: "Comment out lines starting with 'pool' or 'server'"
   lineinfile:
-    path: "/etc/chrony.conf"
+    path: "{{ chrony_config }}"
     regexp: '^(pool.*|server.*)'
     line: '#\1'
     backrefs: True
@@ -95,7 +102,7 @@
 
 - name: "Configure Chronyd (NTP) with timesync servers"
   blockinfile:
-    path: "/etc/chrony.conf"
+    path: "{{ chrony_config }}"
     insertafter: "^(#)?pool.*"
     block: "{{ ntp_time_servers }}"
   become: True
