@@ -74,9 +74,7 @@
     chrony_config: "/etc/chrony/chrony.conf"
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
-
-#TODO: Check if NTP already configured
-- name: "Configure Chronyd (NTP) with timesync servers"
+- name: "Check if Chronyd already have the desired NTP-servers"
   check_mode: True
   register: chrony_already_configured_check
   blockinfile:
@@ -118,6 +116,8 @@
   when: is_not_virtualized and chrony_not_already_configured
 
 #TODO:
+#- name: Harden SSH
+#- name: Diable root login by password through SSH if we are logged in a another privileged user
 #- name: Create a sudo user
 #- name: Create a ansible user
 
