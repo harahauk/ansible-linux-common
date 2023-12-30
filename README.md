@@ -10,6 +10,8 @@ The goal is to leave a functioning and hardened system to which build your other
 This role is currently not compliant with any security profiles, and adheres to the authors preferences only.
 While this role is not production ready it is designed to be so in the future.
 
+At the moment the scope of this role is to provide working SSH and syncronized time as well as setting some sensible defaults of installed functionality for basic terminal usage. It'snot expected to include any other features.
+
 Requirements
 ------------
 
