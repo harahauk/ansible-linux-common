@@ -2,6 +2,7 @@
 # defaults file for ansible-linux-common
 
 default_timezone: "Europe/Oslo"
+install_extra_packages: True # Not for servers
 
 #TODO: Leaving blank disables NTP configuration
 ntp_time_servers: | # This is ideally your own NTP service for your datacenter
@@ -32,13 +33,11 @@ packages:
     - vim-enhanced
     debian:
     - vim #FIXME check if not library heavy
-  extra:
-    common:
+    extra:
     - mlocate
     - lsof
     - pciutils
     - unzip
-    - git
     - ccze
     - bind-utils
       #rhel:

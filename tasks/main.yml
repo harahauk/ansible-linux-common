@@ -52,9 +52,16 @@
   become: True
   #when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
+- name: "Install extra packages for everyday terminal use"
+  package:
+      name: "{{ packages.tty.extra }}"
+      state: present
+  become: True
+  when: install_extra_packages
+
 - name: "Set the timezone"
   timezone:
-    name: "{{ default_timezone }}" #FIXME Set to system running the role?
+    name: "{{ default_timezone }}" #FIXME Set to system running this role?
   become: True
 
 # If this is a virtualized system time is most likely managed by the hypervisor
