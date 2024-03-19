@@ -153,35 +153,3 @@
     #    state: "present"
     #  become: True
 
-# TODO: Move to personaliztion role
-    #- name: "Deploy dotfiles"
-    #  git:
-    #    repo: "https://github.com/harahauk/dotfiles.git"
-    #    dest: "/home/{{ user }}/.config/dotfiles"
-    #    recursive: yes
-    #    accept_hostkey: yes
-    #  become: True
-    #  become_user: "{{ user }}"
-    #
-    #- name: "Symlink dotfiles"
-    #  file:
-    #    src: "/home/{{ user }}/.config/dotfiles/{{ item }}"
-    #    dest: "/home/{{ user }}/{{ item }}"
-    #    state: link
-    #    force: yes
-    #  with_items:
-    #    - ".vim"
-    #    - ".vimrc"
-    #    - ".screenrc"
-    #    - ".bashrc"
-    #  become: True
-    #  become_user: "{{ user }}"
-    #
-    #- name: "Symlink bashrc to bash_profile"
-    #  file:
-    #      src: "/home/{{ user }}/.config/dotfiles/.bashrc"
-    #      dest: "/home/{{ user }}/.bash_profile"
-    #      state: link
-    #      force: yes
-    #  become: True
-    #  become_user: "{{ user }}"
