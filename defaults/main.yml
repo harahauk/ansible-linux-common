@@ -33,6 +33,7 @@ packages:
     - vim-enhanced
     debian:
     - vim
+    - needrestart
     extra:
     - mlocate
     - lsof
