@@ -19,9 +19,10 @@ You need ansible [installed](./install_ansible.sh) and also the community genera
 This role comes with a [script](./install) that might or might not setup Ansible correctly for you.
 On most systems this will do:
 ´´´
-dnf install ansible-core # Replace dns f\with apt for Ubutnu/Debian
+dnf install ansible-core
 ansible-galaxy collection install community.general
 ´´´
+Note: Replace dnf with your package manager like 'apt' for Ubuntu/Debian-based OS.
 
 Role Variables
 --------------
