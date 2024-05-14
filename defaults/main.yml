@@ -2,6 +2,7 @@
 # defaults file for ansible-linux-common
 
 default_timezone: "Europe/Oslo"
+default_hostname: "localhost" # Will be replaced by ansible if it maches this variable
 install_extra_packages: False # Not for servers
 
 #TODO: Leaving blank disables NTP configuration

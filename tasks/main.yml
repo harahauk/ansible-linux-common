@@ -3,72 +3,78 @@
 
 # vim:ts=2:sw=2
 
+- name: "Change the hostname if it matches default hostname"
+  become: yes
+  hostname:
+    name: "{{ inventory_hostname }}"
+  when: ansible_hostname == default_hostname 
+
 - name: "Install packages for RHEL-based OS"
+  become: yes
   package:
       name: "{{ packages.base.rh_common }}"
       state: present
-  become: True
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
 - name: "Install packages for RHEL (not the testing distributions)"
   package:
       name: "{{ packages.base.rhel }}"
       state: present
-  become: True
+  become: yes
   when: "(ansible_os_family == 'RedHat') and not (ansible_distribution == 'Fedora')"
 
 - name: "Install packages for Debian-based OS"
   package:
       name: "{{ packages.base.debian }}"
       state: present
-      update_cache: True #TODO: Check if neccesary
-  become: True
+      update_cache: yes #TODO: Check if neccesary
+  become: yes
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
 - name: "Install packages common for all hosts"
   package:
       name: "{{ packages.base.common }}"
       state: present
-  become: True
+  become: yes
 
 - name: "Install packages for RHEL-hosts that use interactive shell"
   package:
       name: "{{ packages.tty.rh_common }}"
       state: present
-  become: True
+  become: yes
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
 - name: "Install packages for Debian-hosts that use interactive shell"
   package:
       name: "{{ packages.tty.debian }}"
       state: present
-  become: True
+  become: yes
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
 - name: "Install packages for all hosts that use interactive shell"
   package:
       name: "{{ packages.tty.common }}"
       state: present
-  become: True
+  become: yes
   #when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
 - name: "Install extra packages for everyday terminal use"
   package:
       name: "{{ packages.tty.extra }}"
       state: present
-  become: True
+  become: yes
   when: install_extra_packages
 
 - name: "Set the timezone"
   timezone:
     name: "{{ default_timezone }}" #FIXME Set to system running this role?
-  become: True
+  become: yes
 
 # If this is a virtualized system time is most likely managed by the hypervisor
 - name: "Check if system is virtualized"
   command:
     cmd: "systemd-detect-virt"
-  become: True
+  become: yes
   changed_when: False
   failed_when: False # Returns false if no virtualization found
   register: is_virtual_output
@@ -83,13 +89,13 @@
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
 - name: "Check if Chronyd already have the desired NTP-servers"
-  check_mode: True
+  check_mode: yes
   register: chrony_already_configured_check
   blockinfile:
     path: "{{ chrony_config }}"
     insertafter: "^(#)?pool.*"
     block: "{{ ntp_time_servers }}"
-  become: True
+  become: yes
   notify: "Restart chronyd"
   when: is_not_virtualized
 
@@ -101,8 +107,8 @@
     path: "{{ chrony_config }}"
     regexp: '^(pool.*|server.*)'
     line: '#\1'
-    backrefs: True
-  become: True
+    backrefs: yes
+  become: yes
   notify: "Restart chronyd"
   when: is_not_virtualized and chrony_not_already_configured
 
@@ -111,7 +117,7 @@
     path: "{{ chrony_config }}"
     insertafter: "^(#)?pool.*"
     block: "{{ ntp_time_servers }}"
-  become: True
+  become: yes
   notify: "Restart chronyd"
   when: is_not_virtualized and chrony_not_already_configured
 
@@ -119,8 +125,8 @@
   service:
     name: "chronyd"
     state: started
-    enabled: True
-  become: True
+    enabled: yes
+  become: yes
   when: is_not_virtualized and chrony_not_already_configured
 
 #TODO:
@@ -136,20 +142,20 @@
     #      owner: root
     #      group: root
     #      mode: 660
-    #  become: True
+    #  become: yes
     #  notify: "Restart fail2ban"
     #
     #- name: "Enable fail2ban service"
     #  service:
     #      name: "fail2ban"
     #      state: "started"
-    #      enabled: "True"
-    #  become: True
+    #      enabled: "yes"
+    #  become: yes
     #  notify: "Restart fail2ban"
-    #  ignore_errors: True # System might not have SSH
+    #  ignore_errors: yes # System might not have SSH
     #- name: "Create user"
     #  user:
     #    name: "{{ user }}"
     #    state: "present"
-    #  become: True
+    #  become: yes
 
