@@ -27,9 +27,9 @@ user=`whoami`
 # Python installed by dependencies
 if test "$user" != "root"
 then
-  sudo $packager python3-pip
+  sudo $packager python3-pip sshpass
 else
-  $packager python3-pip
+  $packager python3-pip sshpass
 fi
 pip install pipx
 if test "$?" -eq 1
