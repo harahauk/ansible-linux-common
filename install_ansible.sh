@@ -1,6 +1,7 @@
 #!/bin/sh
 # This script gets you ready to use ansible
-function decide_packager () {
+# @author Harald Hauknes <harald@hauknes.org>
+decide_packager () {
         # Set default
         packager=dnf
         # Source OS-info
@@ -22,9 +23,24 @@ function decide_packager () {
 		esac
         }
 decide_packager
+user=`whoami`
 # Python installed by dependencies
-sudo $packager python3-pip
+if test "$user" != "root"
+then
+  sudo $packager python3-pip
+else
+  $packager python3-pip
+fi
 pip install pipx
+if test "$?" -eq 1
+then
+  echo Broken packages-warning? Will try to install pipx-package
+  $packager pipx
+fi
+echo $?
 # Use pipx to not break system packages
 pipx install ansible-core
+pipx ensurepath
+bash
 ansible-galaxy collection install community.general
+
