@@ -15,10 +15,12 @@ ntp_time_servers: | # This is ideally your own NTP service for your datacenter
 packages:
   base:
     common:
-    - chrony
+    - dialog # Dependency for too much to not have installed
+    - chrony # NTP
     - gpg
     - fail2ban #FIXME: Evaluate alternatives
     - tar
+    - needrestart # Perl scripts to evaluate services that needs restarting
     rh_common:
     - python3-firewall
     - firewalld
@@ -34,7 +36,6 @@ packages:
     - vim-enhanced
     debian:
     - vim
-    - needrestart
     extra:
     - mlocate
     - lsof
