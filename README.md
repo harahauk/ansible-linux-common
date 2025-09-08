@@ -15,15 +15,16 @@ At the moment the scope of this role is to provide working SSH and syncronized t
 Requirements
 ------------
 
-You need ansible [installed](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) and the ´community general´-modules which might or migh not be preinstalled with your ansible-distribution.
+You need ansible [installed](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) and the `community general`-modules which might or migh not be preinstalled with your ansible-distribution.
 I've made a  [script](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) that might or might not setup Ansible correctly for you.
-On most systems this will do just fine:  
+On most systems this will do you just fine:  
 
-´´´bash
+```bash
 dnf install ansible-core
 ansible-galaxy collection install community.general
-´´´
-**Note:** Replace ´dnf´ with your package--manager like ´apt´ for Ubuntu/Debian-based OS.
+```
+**Note:** Replace `dnf` with your package--manager like `apt` for Ubuntu/Debian-based OS.
+
 
 Role Variables
 --------------
@@ -31,14 +32,14 @@ Role Variables
 | Variable                  | Mandatory | Description |
 | ------------------------- | --------- | ----------- |
 | timezone                  | No        | Sets the timezone of the system, if unsure you should select 'UTC' |
-| common_peform_upgrades    | No        | Defaults to 'yes' |
+| common_peform_upgrades    | No        | Defaults to 'yes'. Upgrades packages already installed on the system using it's package-manager |
 
 
 Dependencies
 ------------
 This role might **"work"** on a wide range of Linux-distributions, but below are the distros that are actually tested.
-Now lets define "working" as that running this role on a system might leave it better off than not running
-this role, but makes no presumtions to do good hardening or setup of that system.
+Now lets define `working` as that running this role on a system **might** leave it better off than not running
+this role, but makes **no** presumtions to do good hardening or setup of that system.
 
 
 xor:
@@ -46,6 +47,7 @@ xor:
   - Red Hat Linux 9
   - AlmaLinux 9
   - Fedora 38
+
 
 Example Playbook
 ----------------
