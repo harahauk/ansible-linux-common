@@ -23,6 +23,13 @@
   become: yes
   when: "(ansible_os_family == 'RedHat') and not (ansible_distribution == 'Fedora')"
 
+- name: "Upgrade packages system-wide"
+  when: common_perform_upgrades
+  become: yes
+  package:
+    name: '*'
+    state: 'latest'
+
 - name: "Install packages for Debian-based OS"
   package:
       name: "{{ packages.base.debian }}"
@@ -84,6 +91,9 @@
     is_not_virtualized: "'lxc' not in is_virtual_output.stdout and 'wsl' not in is_virtual_output.stdout"
     chrony_config: "/etc/chrony.conf"
 
+- debug:
+    msg: "{{ is_virtual_output }}"
+
 - set_fact:
     chrony_config: "/etc/chrony/chrony.conf"
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
@@ -122,6 +132,7 @@
   when: is_not_virtualized and chrony_not_already_configured
 
 - name: "Start and enable chronyd (NTP)"
+  ignore_errors: yes #TODO: Bug
   service:
     name: "chronyd"
     state: started
