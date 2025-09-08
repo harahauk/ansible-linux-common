@@ -32,13 +32,13 @@ Role Variables
 | Variable                  | Mandatory | Description |
 | ------------------------- | --------- | ----------- |
 | timezone                  | No        | Sets the timezone of the system, if unsure you should select 'UTC' |
-| common_peform_upgrades    | No        | Defaults to 'yes'. Upgrades packages already installed on the system using it's package-manager |
+| common_perform_upgrades   | No        | Defaults to 'yes'. Upgrades packages already installed on the system using it's package-manager |
 
 
 Dependencies
 ------------
 This role might **"work"** on a wide range of Linux-distributions, but below are the distros that are actually tested.
-Now lets define `working` as that running this role on a system **might** leave it better off than not running
+Now lets define **"working"** as that running this role on a system **might** leave it better off than not running
 this role, but makes **no** presumtions to do good hardening or setup of that system.
 
 
@@ -52,12 +52,13 @@ xor:
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - common # Change to the folder you checked this role out to
-         - { role: username.rolename, x: 42 }
+```ansible
+- hosts: servers
+  roles:
+  - common # Change to the folder you checked this role out to
+  vars:
+  common_perform_upgrades: no
+```
 
 
 License
