@@ -52,12 +52,12 @@ xor:
 Example Playbook
 ----------------
 
-```ansible
+```ansible-playbook
 - hosts: servers
   roles:
   - common # Change to the folder you checked this role out to
   vars:
-  common_perform_upgrades: no
+    common_perform_upgrades: no
 ```
 
 
