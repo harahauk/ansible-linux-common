@@ -15,14 +15,15 @@ At the moment the scope of this role is to provide working SSH and syncronized t
 Requirements
 ------------
 
-You need ansible [installed](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) and the 'community general'-modules which might or migh not be preinstalled with your ansible-distribution.
+You need ansible [installed](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) and the ´community general´-modules which might or migh not be preinstalled with your ansible-distribution.
 I've made a  [script](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) that might or might not setup Ansible correctly for you.
-On most systems this will do just fine:
+On most systems this will do just fine:  
+
 ´´´bash
 dnf install ansible-core
 ansible-galaxy collection install community.general
 ´´´
-Note: Replace dnf with your package manager like 'apt' for Ubuntu/Debian-based OS.
+**Note:** Replace ´dnf´ with your package--manager like ´apt´ for Ubuntu/Debian-based OS.
 
 Role Variables
 --------------
