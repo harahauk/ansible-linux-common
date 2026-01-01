@@ -77,6 +77,20 @@
     name: "{{ default_timezone }}" #FIXME Set to system running this role?
   become: yes
 
+- name: "Generate locale"
+  become: yes
+  changed_when: no
+  shell:
+    cmd: "locale-gen {{ default_locale }}"
+
+- name: "Set default locale in .bashrc skeleton-file"
+  become: yes
+  lineinfile:
+    path: "/etc/skel/.bashrc"
+    line:
+    - 'export LC_ALL="{{ default_locale }}"'
+    - 'export LANG="{{ default_locale }}"'
+
 # If this is a virtualized system time is most likely managed by the hypervisor
 - name: "Check if system is virtualized"
   command:

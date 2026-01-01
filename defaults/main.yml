@@ -3,6 +3,7 @@
 
 default_timezone: "Europe/Oslo"
 default_hostname: "localhost" # Will be replaced by ansible if it maches this variable
+default_locale: "nb_NO.UTF-8"
 install_extra_packages: False # Not for servers
 common_perform_pkg_upgrades: yes
 
