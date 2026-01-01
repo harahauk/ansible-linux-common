@@ -4,6 +4,7 @@
 default_timezone: "Europe/Oslo"
 default_hostname: "localhost" # Will be replaced by ansible if it maches this variable
 install_extra_packages: False # Not for servers
+perform_pkg_upgrades: True
 
 #TODO: Leaving blank disables NTP configuration
 ntp_time_servers: | # This is ideally your own NTP service for your datacenter
