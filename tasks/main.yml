@@ -7,7 +7,7 @@
   become: yes
   hostname:
     name: "{{ inventory_hostname }}"
-  when: ansible_hostname == default_hostname 
+  when: ansible_hostname == default_hostname
 
 - name: "Install packages for RHEL-based OS"
   become: yes
@@ -24,7 +24,7 @@
   when: "(ansible_os_family == 'RedHat') and not (ansible_distribution == 'Fedora')"
 
 - name: "Upgrade packages system-wide"
-  when: common_perform_upgrades
+  when: common_perform_pkg_upgrades
   become: yes
   package:
     name: '*'
