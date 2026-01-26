@@ -77,11 +77,12 @@
     name: "{{ default_timezone }}" #FIXME Set to system running this role?
   become: yes
 
-- name: "Generate locale"
+- name: "Generate locale (if not RHEL-based distro)"
   become: yes
   changed_when: no
   shell:
     cmd: "locale-gen {{ default_locale }}"
+  when: "(ansible_os_family != 'RedHat') and (ansible_os_family != 'Rocky')"
 
 - name: "Set default locale in .bashrc skeleton-file"
   become: yes
