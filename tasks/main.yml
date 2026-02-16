@@ -102,12 +102,8 @@
   register: is_virtual_output
 
 - set_fact: # Focusing on LXC for now, had no problems with KVM
-    #is_not_virtualized: "'lxc' not in is_virtual_output.stdout"
-    is_not_virtualized: "'lxc' not in is_virtual_output.stdout and 'wsl' not in is_virtual_output.stdout"
+    is_not_virtualized: "{{ 'lxc' not in is_virtual_output.stdout and 'wsl' not in is_virtual_output.stdout }}"
     chrony_config: "/etc/chrony.conf"
-
-- debug:
-    msg: "{{ is_virtual_output }}"
 
 - set_fact:
     chrony_config: "/etc/chrony/chrony.conf"
