@@ -23,12 +23,19 @@
   become: yes
   when: "(ansible_os_family == 'RedHat') and not (ansible_distribution == 'Fedora')"
 
-- name: "Upgrade packages system-wide"
-  when: common_perform_pkg_upgrades
+- name: "Upgrade packages system-wide (Debian-based distros)"
+  when: "(ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu') and common_perform_pkg_upgrades"
   become: yes
-  package:
+  apt:
+    upgrade: dist
+    update_cache: yes
+
+- name: "Upgrade packages system-wide (RHEL-based distros)"
+  when: "(ansible_os_family == 'RedHat' or ansible_os_family == 'Rocky') and common_perform_pkg_upgrades"
+  become: yes
+  dnf:
     name: '*'
-    state: 'latest'
+    state: latest
 
 - name: "Install packages for Debian-based OS"
   package:
@@ -53,22 +60,22 @@
 
 - name: "Install packages for Debian-hosts that use interactive shell"
   package:
-      name: "{{ packages.tty.debian }}"
-      state: present
+    name: "{{ packages.tty.debian }}"
+    state: present
   become: yes
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
 - name: "Install packages for all hosts that use interactive shell"
   package:
-      name: "{{ packages.tty.common }}"
-      state: present
+    name: "{{ packages.tty.common }}"
+    state: present
   become: yes
   #when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
 - name: "Install extra packages for everyday terminal use"
   package:
-      name: "{{ packages.tty.extra }}"
-      state: present
+    name: "{{ packages.tty.extra }}"
+    state: present
   become: yes
   when: install_extra_packages
 
