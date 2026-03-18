@@ -9,19 +9,31 @@
     name: "{{ inventory_hostname }}"
   when: ansible_hostname == default_hostname
 
+- name: "Install packages for RHEL (not the testing distributions)"
+  #check_mode: no
+  become: yes
+  dnf:
+    name: "{{ packages.base.rhel }}"
+    state: present
+  when: "(ansible_os_family == 'RedHat') and not (ansible_distribution == 'Fedora')"
+
+- name: "Ensure EPEL repo is installed (bootstrap)"
+  register: epel_installed
+  become: yes
+  package:
+    name: epel-release
+    state: present
+  become: yes
+
+- debug:
+    msg: "{{ epel_installed }}"
+
 - name: "Install packages for RHEL-based OS"
   become: yes
   package:
-      name: "{{ packages.base.rh_common }}"
-      state: present
+    name: "{{ packages.base.rh_common }}"
+    state: present
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
-
-- name: "Install packages for RHEL (not the testing distributions)"
-  package:
-      name: "{{ packages.base.rhel }}"
-      state: present
-  become: yes
-  when: "(ansible_os_family == 'RedHat') and not (ansible_distribution == 'Fedora')"
 
 - name: "Upgrade packages system-wide (Debian-based distros)"
   when: "(ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu') and common_perform_pkg_upgrades"
@@ -45,17 +57,19 @@
   become: yes
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
-- name: "Install packages common for all hosts"
-  package:
-      name: "{{ packages.base.common }}"
-      state: present
+- name: "Install packages common for popular Linux-distributions"
   become: yes
+  check_mode: no # Dependency missing when --check is run
+  package:
+    name: "{{ packages.base.common }}"
+    state: present
 
 - name: "Install packages for RHEL-hosts that use interactive shell"
-  package:
-      name: "{{ packages.tty.rh_common }}"
-      state: present
+  check_mode: no # Dependency missing when --check is run
   become: yes
+  dnf:
+    name: "{{ packages.tty.rh_common }}"
+    state: present
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
 - name: "Install packages for Debian-hosts that use interactive shell"
