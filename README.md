@@ -2,7 +2,7 @@ ansible-linux-common
 ====================
 ```diff
 # Project maturity (- Dev/+ Staging/@ Prod):
-- Dev
++ Production
 ```
 
 This is an [Ansible](https://www.ansible.com/)-role which provides a baseline of configuration to \*nix-based systems.
