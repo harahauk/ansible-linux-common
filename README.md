@@ -25,7 +25,7 @@ On most systems this will do just fine:
 dnf install ansible-core
 ansible-galaxy collection install community.general
 ```
-**Note:** Replace `dnf` with your package--manager like `apt` for Ubuntu/Debian-based OS.
+**Note:** Replace `dnf` with your package-manager like `apt` for Ubuntu/Debian-based OS.
 
 
 Role Variables
