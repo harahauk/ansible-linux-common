@@ -17,11 +17,12 @@ At the moment the scope of this role is to provide working SSH and syncronized t
 
 Role Variables
 --------------
-| Variable                      | Default | Description |
-| ----------------------------- | --------| ----------- |
-| timezone                      | Oslo    | Sets the timezone of the system, if unsure you should select 'UTC' |
-| common_perform_pgk_upgrades   | false   | Upgrades packages already installed on the system using its package-manager |
-| common_perform_pkg_autoremove | false   | Removes packages deemed obsolete by the package-manager |
+| Variable                      | Default   | Description |
+| ----------------------------- | --------- | ----------- |
+| default_hostname              | localhost | If the hostname matches the value of this variable, the hostname on the system will be set to the one defined for it in the inventory |
+| timezone                      | Oslo      | Sets the timezone of the system, if unsure you should select 'UTC' |
+| common_perform_pgk_upgrades   | false     | Upgrades packages already installed on the system using its package-manager |
+| common_perform_pkg_autoremove | false     | Removes packages deemed obsolete by the package-manager |
 
 
 Requirements
