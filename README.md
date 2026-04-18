@@ -6,19 +6,19 @@ ansible-linux-common
 ```
 
 This is an [Ansible](https://www.ansible.com/)-role which provides a baseline-configuration including
-packages and configuration changes on `\*nix`-based systems.
-It is meant as the building block as to which other `ansible`-roles can be built on.
-Currently does not provide much of hardening of the system.
+packages and configuration changes on `*nix`-based systems.
+It is meant as the building block as to which other **ansible**-roles can be built on.
+It currently does not provide much of hardening for the system.  
 This role is currently **not** compliant with any ANSI-security profiles and adheres to the *author*s preferences only.
 
 
-At the moment the scope of this role is to provide working SSH and syncronized time as well as setting some sensible defaults of installed functionality for basic terminal usage. It's not expected to include any other features.
+At the moment the scope of this role is to provide working SSH and syncronized time as well as setting some sensible defaults of installed functionality for basic terminal usage. It's not expected to include any other features in the future except some hardening.
+
 
 Requirements
 ------------
-
-You need ansible [installed](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) and the `community general`-modules which might or migh not be preinstalled with your ansible-distribution.
-I've made a  [script](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) that provides a non-intrusive way of installing Ansible that might be worth running for convenience.
+You need `ansible` installed and the `community general`-module collection which might or migh not be preinstalled with your ansible-distribution.
+I maintain a [installation-script](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) that provides a non-intrusive way of installing Ansible. It might be worth running for convenience.
 On most systems this will do just fine:  
 
 ```bash
@@ -30,7 +30,6 @@ ansible-galaxy collection install community.general
 
 Role Variables
 --------------
-
 | Variable                      | Default | Description |
 | ----------------------------- | --------| ----------- |
 | timezone                      | Oslo    | Sets the timezone of the system, if unsure you should select 'UTC' |
@@ -56,21 +55,23 @@ Example Playbook
 ----------------
 
 ```ansible-playbook
-- hosts: servers
+
+- hosts:
+  - my_clients
+  - my_servers
   roles:
-  - common # Change to the folder you checked this role out to
+  - common # Change to the folder you checked this repisotory out as
   vars:
-    common_perform_upgrades: no
+    common_perform_pkg_upgrades: no
+    common_perform_pkg_autoremove: yes
 ```
 
 
 License
 -------
-
 MIT License
 
 
 Author Information
 ------------------
-
 Harald Hauknes <harald at hauknes dot org>
