@@ -1,7 +1,7 @@
 ansible-linux-common
 ====================
 ```diff
-# Project maturity (- Dev/+ Staging/@ Prod):
+# Project maturity (- Dev/@ Staging/+ Prod):
 + Production
 ```
 
@@ -15,19 +15,6 @@ This role is currently **not** compliant with any ANSI-security profiles and adh
 At the moment the scope of this role is to provide working SSH and syncronized time as well as setting some sensible defaults of installed functionality for basic terminal usage. It's not expected to include any other features in the future except some hardening.
 
 
-Requirements
-------------
-You need `ansible` installed and the `community general`-module collection which might or migh not be preinstalled with your ansible-distribution.
-I maintain a [installation-script](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) that provides a non-intrusive way of installing Ansible. It might be worth running for convenience.
-On most systems this will do just fine:  
-
-```bash
-dnf install ansible-core
-ansible-galaxy collection install community.general
-```
-**Note:** Replace `dnf` with your package-manager like `apt` for Ubuntu/Debian-based OS.
-
-
 Role Variables
 --------------
 | Variable                      | Default | Description |
@@ -35,6 +22,20 @@ Role Variables
 | timezone                      | Oslo    | Sets the timezone of the system, if unsure you should select 'UTC' |
 | common_perform_pgk_upgrades   | false   | Upgrades packages already installed on the system using its package-manager |
 | common_perform_pkg_autoremove | false   | Removes packages deemed obsolete by the package-manager |
+
+
+Requirements
+------------
+You need 'ansible' installed for a control-node. Either as a seperate computer/VM or on the intended target. You need the Ansible module-collection `community general` (which often is pre-installed with your Ansible-distribution). This is the basis of any Ansible-control node, additionally to operate this role you need  the `community docker` module.
+
+I maintain a [script at Github](https://raw.githubusercontent.com/harahauk/ansible-help/refs/heads/main/install_ansible.sh) which automates installation in a way that do not interfere with system stability. The script installs the two module-packs as well.
+
+On most systems these commands will lead to a working control node and is maintainable without the use of the script:  
+```bash
+dnf install ansible-core
+ansible-galaxy collection install community.general
+```
+**Note:** Replace `dnf` with your package-manager like `apt` for Ubuntu/Debian-based OS.
 
 
 Dependencies
