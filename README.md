@@ -29,10 +29,11 @@ ansible-galaxy collection install community.general
 Role Variables
 --------------
 
-| Variable                  | Mandatory | Description |
-| ------------------------- | --------- | ----------- |
-| timezone                  | No        | Sets the timezone of the system, if unsure you should select 'UTC' |
-| common_perform_upgrades   | No        | Defaults to 'yes'. Upgrades packages already installed on the system using it's package-manager |
+| Variable                      | Default | Description |
+| ----------------------------- | --------| ----------- |
+| timezone                      | Oslo    | Sets the timezone of the system, if unsure you should select 'UTC' |
+| common_perform_pgk_upgrades   | false   | Upgrades packages already installed on the system using its package-manager |
+| common_perform_pkg_autoremove | false   | Removes packages deemed obsolete by the package-manager |
 
 
 Dependencies

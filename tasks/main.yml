@@ -4,46 +4,60 @@
 # vim:ts=2:sw=2
 
 - name: "Change the hostname if it matches default hostname"
-  become: yes
+  become: true
   hostname:
     name: "{{ inventory_hostname }}"
   when: ansible_hostname == default_hostname
 
+- name: "Install 'epel-relase' on RHEL-based distributions"
+  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+  register: epel_installed
+  become: true
+  package:
+    name: "epel-release"
+    state: present
+
 - name: "Install packages for RHEL (not the testing distributions)"
   #check_mode: no
-  become: yes
+  become: true
   dnf:
     name: "{{ packages.base.rhel }}"
     state: present
   when: "(ansible_os_family == 'RedHat') and not (ansible_distribution == 'Fedora')"
 
-- name: "Ensure EPEL repo is installed (bootstrap)"
-  register: epel_installed
-  become: yes
-  package:
-    name: epel-release
-    state: present
-
-- debug:
-    msg: "{{ epel_installed }}"
-
 - name: "Install packages for RHEL-based OS"
-  become: yes
+  become: true
   package:
     name: "{{ packages.base.rh_common }}"
     state: present
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
+- name: "Use package-manager's auto-removal feature to remove obsolete packages system-wide (Debian-based distros)"
+  register: autoremoval_result
+  changed_when: "'Removing: 0' not in autoremoval_result.stdout"
+  when: "(ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu') and common_perform_pkg_autoremove"
+  become: true
+  shell:
+    cmd: "apt autoremove -y"
+
+- name: "Use package-manager's auto-removal feature to remove obsolete packages system-wide (RHEL-based distros)"
+  when: "(ansible_os_family == 'RedHat' or ansible_os_family == 'Rocky') and common_perform_pkg_autoremove"
+  become: true
+  register: autoremoval_result
+  changed_when: "'Nothing to do.' not in autoremoval_result.stdout"
+  shell:
+    cmd: "dnf autoremove -y"
+
 - name: "Upgrade packages system-wide (Debian-based distros)"
   when: "(ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu') and common_perform_pkg_upgrades"
-  become: yes
+  become: true
   apt:
     upgrade: dist
     update_cache: yes
 
 - name: "Upgrade packages system-wide (RHEL-based distros)"
   when: "(ansible_os_family == 'RedHat' or ansible_os_family == 'Rocky') and common_perform_pkg_upgrades"
-  become: yes
+  become: true
   dnf:
     name: '*'
     state: latest
@@ -53,11 +67,11 @@
       name: "{{ packages.base.debian }}"
       state: present
       update_cache: yes #TODO: Check if neccesary
-  become: yes
+  become: true
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
 - name: "Install packages common for popular Linux-distributions"
-  become: yes
+  become: true
   check_mode: no # Dependency missing when --check is run
   package:
     name: "{{ packages.base.common }}"
@@ -65,7 +79,7 @@
 
 - name: "Install packages for RHEL-hosts that use interactive shell"
   check_mode: no # Dependency missing when --check is run
-  become: yes
+  become: true
   dnf:
     name: "{{ packages.tty.rh_common }}"
     state: present
@@ -75,37 +89,37 @@
   package:
     name: "{{ packages.tty.debian }}"
     state: present
-  become: yes
+  become: true
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
 - name: "Install packages for all hosts that use interactive shell"
   package:
     name: "{{ packages.tty.common }}"
     state: present
-  become: yes
+  become: true
   #when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
 - name: "Install extra packages for everyday terminal use"
   package:
     name: "{{ packages.tty.extra }}"
     state: present
-  become: yes
+  become: true
   when: install_extra_packages
 
 - name: "Set the timezone"
   timezone:
     name: "{{ default_timezone }}" #FIXME Set to system running this role?
-  become: yes
+  become: true
 
 - name: "Generate locale (if not RHEL-based distro)"
-  become: yes
+  become: true
   changed_when: no
   shell:
     cmd: "locale-gen {{ default_locale }}"
   when: "(ansible_os_family != 'RedHat') and (ansible_os_family != 'Rocky')"
 
 - name: "Set default locale in .bashrc skeleton-file"
-  become: yes
+  become: true
   lineinfile:
     path: "/etc/skel/.bashrc"
     line:
@@ -116,7 +130,7 @@
 - name: "Check if system is virtualized"
   command:
     cmd: "systemd-detect-virt"
-  become: yes
+  become: true
   changed_when: False
   failed_when: False # Returns false if no virtualization found
   register: is_virtual_output
@@ -136,7 +150,7 @@
     path: "{{ chrony_config }}"
     insertafter: "^(#)?pool.*"
     block: "{{ ntp_time_servers }}"
-  become: yes
+  become: true
   notify: "Restart chronyd"
   when: is_not_virtualized
 
@@ -149,7 +163,7 @@
     regexp: '^(pool.*|server.*)'
     line: '#\1'
     backrefs: yes
-  become: yes
+  become: true
   notify: "Restart chronyd"
   when: is_not_virtualized and chrony_not_already_configured
 
@@ -158,7 +172,7 @@
     path: "{{ chrony_config }}"
     insertafter: "^(#)?pool.*"
     block: "{{ ntp_time_servers }}"
-  become: yes
+  become: true
   notify: "Restart chronyd"
   when: is_not_virtualized and chrony_not_already_configured
 
@@ -168,7 +182,7 @@
     name: "chronyd"
     state: started
     enabled: yes
-  become: yes
+  become: true
   when: is_not_virtualized and chrony_not_already_configured
 
 #TODO:
@@ -184,7 +198,7 @@
     #      owner: root
     #      group: root
     #      mode: 660
-    #  become: yes
+    #  become: true
     #  notify: "Restart fail2ban"
     #
     #- name: "Enable fail2ban service"
@@ -192,12 +206,12 @@
     #      name: "fail2ban"
     #      state: "started"
     #      enabled: "yes"
-    #  become: yes
+    #  become: true
     #  notify: "Restart fail2ban"
     #  ignore_errors: yes # System might not have SSH
     #- name: "Create user"
     #  user:
     #    name: "{{ user }}"
     #    state: "present"
-    #  become: yes
+    #  become: true
 
