@@ -5,10 +5,12 @@ ansible-linux-common
 + Production
 ```
 
-This is an [Ansible](https://www.ansible.com/)-role which provides a baseline of configuration to \*nix-based systems.
-The goal is to leave a functioning and hardened system to which build your other ansible roles on.
-This role is currently not compliant with any security profiles, and adheres to the authors preferences only.
-While this role is not production ready it is designed to be so in the future.
+This is an [Ansible](https://www.ansible.com/)-role which provides a baseline-configuration including
+packages and configuration changes on `\*nix`-based systems.
+It is meant as the building block as to which other `ansible`-roles can be built on.
+Currently does not provide much of hardening of the system.
+This role is currently **not** compliant with any ANSI-security profiles and adheres to the *author*s preferences only.
+
 
 At the moment the scope of this role is to provide working SSH and syncronized time as well as setting some sensible defaults of installed functionality for basic terminal usage. It's not expected to include any other features.
 
@@ -16,8 +18,8 @@ Requirements
 ------------
 
 You need ansible [installed](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) and the `community general`-modules which might or migh not be preinstalled with your ansible-distribution.
-I've made a  [script](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) that might or might not setup Ansible correctly for you.
-On most systems this will do you just fine:  
+I've made a  [script](https://github.com/harahauk/ansible-help/blob/main/install_ansible.sh) that provides a non-intrusive way of installing Ansible that might be worth running for convenience.
+On most systems this will do just fine:  
 
 ```bash
 dnf install ansible-core
