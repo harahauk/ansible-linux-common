@@ -1,14 +1,15 @@
----
+--- 
 # defaults file for ansible-linux-common
 
 default_timezone: "Europe/Oslo"
-default_hostname: "localhost" # Will be replaced by ansible if it maches this variable
-default_locale: "nb_NO.UTF-8"
-install_extra_packages: False # Not for servers
-common_perform_pkg_upgrades: yes
+default_hostname: "localhost"        # The hostname-value provided here will be replaced by the one defined in inventory if it matches the value
+default_locale: "nb_NO.UTF-8"        # TODO: Locale has some bugs still in this role
+install_extra_packages: false        # Default is false, most systems have no need of convenience-packages.
+common_perform_pkg_upgrades: false   # Default is 'false', overrride with playbook
+common_perform_pkg_autoremove: false # Default is 'false', overrride with playbook
 
 #TODO: Leaving blank disables NTP configuration
-ntp_time_servers: | # This is ideally your own NTP service for your datacenter
+ntp_time_servers: | # NOTE: This is ideally your own NTP service for your datacenter
   server 0.no.pool.ntp.org iburst
   server 1.no.pool.ntp.org iburst
   server 2.no.pool.ntp.org iburst
@@ -17,31 +18,31 @@ ntp_time_servers: | # This is ideally your own NTP service for your datacenter
 packages:
   base:
     common:
-    - dialog # Dependency for too much to not have installed
-    - chrony # NTP
-    - gpg
-    - fail2ban #FIXME: Evaluate alternatives
-    - tar
-    - needrestart # Perl scripts to evaluate services that needs restarting
+      - dialog # Explanation: Too many packages expect 'dialog' or similar UI-component when displaying output
+      - chrony # NTP
+      - gpg
+      - fail2ban #FIXME: Evaluate alternatives
+      - tar
+      - needrestart # Perl scripts to evaluate services that needs restarting
     rh_common:
-    - python3-firewall
-    - firewalld
+      - python3-firewall
+      - firewalld
     rhel:
-    - epel-release #FIXME: Oracle Linux and Fedora
+      - epel-release #FIXME: Oracle Linux and Fedora
     debian:
-    - acl
+      - acl
   tty:
     common:
-    - screen
-    - git # git-core on some systems?
+      - screen
+      - git # git-core on some systems?
     rh_common:
-    - vim-enhanced
+      - vim-enhanced
     debian:
-    - vim
+      - vim
     extra:
-    - mlocate
-    - lsof
-    - pciutils
-    - unzip
-    - ccze
-    - bind-utils
+      - mlocate
+      - lsof
+      - pciutils
+      - unzip
+      - ccze
+      - bind-utils
