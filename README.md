@@ -19,8 +19,8 @@ Role Variables
 --------------
 | Variable                      | Default   | Description |
 | ----------------------------- | --------- | ----------- |
-| default_hostname              | localhost | If the hostname matches the value of this variable, the hostname on the system will be set to the one defined for it in the inventory |
-| timezone                      | Oslo      | Sets the timezone of the system, if unsure you should select 'UTC' |
+| default_hostname              | localhost | Replaces the targets hostname with the one defined in inventory if the current target hostname matches the value of this variable |
+| timezone                      | Oslo      | Sets the timezone of the system, if unsure you should choose 'UTC' |
 | common_perform_pgk_upgrades   | false     | Upgrades packages already installed on the system using its package-manager |
 | common_perform_pkg_autoremove | false     | Removes packages deemed obsolete by the package-manager |
 
@@ -62,7 +62,7 @@ Example Playbook
   - my_clients
   - my_servers
   roles:
-  - common # Change to the folder you checked this repisotory out as
+  - common # Change to the folder you checked this repository out as
   vars:
     common_perform_pkg_upgrades: no
     common_perform_pkg_autoremove: yes
