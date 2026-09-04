@@ -10,7 +10,8 @@
   when: ansible_hostname == default_hostname
 
 - name: "Install 'epel-relase' on RHEL-based distributions"
-  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+  #TODO: Why not let other modules decide if they need epel or not?
+  when: "((ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')) and (ansible_distribution != 'Fedora')"
   register: epel_installed
   become: true
   package:
