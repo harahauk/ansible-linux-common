@@ -11,7 +11,7 @@
 
 - name: "Install 'epel-relase' on RHEL-based distributions"
   #TODO: Why not let other modules decide if they need epel or not?
-  when: "((ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')) and (ansible_distribution != 'Fedora')"
+  when: "((ansible_facts['os_family'] == 'RedHat') or (ansible_facts['os_family'] == 'Rocky')) and (ansible_facts['distribution'] != 'Fedora')"
   register: epel_installed
   become: true
   package:
@@ -24,25 +24,25 @@
   dnf:
     name: "{{ packages.base.rhel }}"
     state: present
-  when: "(ansible_os_family == 'RedHat') and not (ansible_distribution == 'Fedora')"
+  when: "(ansible_facts['os_family'] == 'RedHat') and not (ansible_facts['distribution'] == 'Fedora')"
 
 - name: "Install packages for RHEL-based OS"
   become: true
   package:
     name: "{{ packages.base.rh_common }}"
     state: present
-  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+  when: "(ansible_facts['os_family'] == 'RedHat') or (ansible_facts['os_family'] == 'Rocky')"
 
 - name: "Use package-manager's auto-removal feature to remove obsolete packages system-wide (Debian-based distros)"
   register: autoremoval_result
   changed_when: "'Removing: 0' not in autoremoval_result.stdout"
-  when: "(ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu') and common_perform_pkg_autoremove"
+  when: "(ansible_facts['os_family'] == 'Debian' or ansible_facts['os_family'] == 'Ubuntu') and common_perform_pkg_autoremove"
   become: true
   shell:
     cmd: "apt autoremove -y"
 
 - name: "Use package-manager's auto-removal feature to remove obsolete packages system-wide (RHEL-based distros)"
-  when: "(ansible_os_family == 'RedHat' or ansible_os_family == 'Rocky') and common_perform_pkg_autoremove"
+  when: "(ansible_facts['os_family'] == 'RedHat' or ansible_facts['os_family'] == 'Rocky') and common_perform_pkg_autoremove"
   become: true
   register: autoremoval_result
   changed_when: "'Nothing to do.' not in autoremoval_result.stdout"
@@ -50,14 +50,14 @@
     cmd: "dnf autoremove -y"
 
 - name: "Upgrade packages system-wide (Debian-based distros)"
-  when: "(ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu') and common_perform_pkg_upgrades"
+  when: "(ansible_facts['os_family'] == 'Debian' or ansible_facts['os_family'] == 'Ubuntu') and common_perform_pkg_upgrades"
   become: true
   apt:
     upgrade: dist
     update_cache: yes
 
 - name: "Upgrade packages system-wide (RHEL-based distros)"
-  when: "(ansible_os_family == 'RedHat' or ansible_os_family == 'Rocky') and common_perform_pkg_upgrades"
+  when: "(ansible_facts['os_family'] == 'RedHat' or ansible_facts['os_family'] == 'Rocky') and common_perform_pkg_upgrades"
   become: true
   dnf:
     name: '*'
@@ -69,7 +69,7 @@
       state: present
       update_cache: yes #TODO: Check if neccesary
   become: true
-  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+  when: "(ansible_facts['os_family'] == 'Debian') or (ansible_facts['os_family'] == 'Ubuntu')"
 
 - name: "Install packages common for popular Linux-distributions"
   become: true
@@ -84,21 +84,21 @@
   dnf:
     name: "{{ packages.tty.rh_common }}"
     state: present
-  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+  when: "(ansible_facts['os_family'] == 'RedHat') or (ansible_facts['os_family'] == 'Rocky')"
 
 - name: "Install packages for Debian-hosts that use interactive shell"
   package:
     name: "{{ packages.tty.debian }}"
     state: present
   become: true
-  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+  when: "(ansible_facts['os_family'] == 'Debian') or (ansible_facts['os_family'] == 'Ubuntu')"
 
 - name: "Install packages for all hosts that use interactive shell"
   package:
     name: "{{ packages.tty.common }}"
     state: present
   become: true
-  #when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+  #when: "(ansible_facts['os_family'] == 'RedHat') or (ansible_facts['os_family'] == 'Rocky')"
 
 - name: "Install extra packages for everyday terminal use"
   package:
@@ -117,7 +117,7 @@
   changed_when: no
   shell:
     cmd: "locale-gen {{ default_locale }}"
-  when: "(ansible_os_family != 'RedHat') and (ansible_os_family != 'Rocky')"
+  when: "(ansible_facts['os_family'] != 'RedHat') and (ansible_facts['os_family'] != 'Rocky')"
 
 - name: "Set default locale in .bashrc skeleton-file"
   become: true
@@ -142,7 +142,7 @@
 
 - set_fact:
     chrony_config: "/etc/chrony/chrony.conf"
-  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+  when: "(ansible_facts['os_family'] == 'Debian') or (ansible_facts['os_family'] == 'Ubuntu')"
 
 - name: "Check if Chronyd already have the desired NTP-servers"
   check_mode: yes
