@@ -7,7 +7,7 @@
   become: true
   hostname:
     name: "{{ inventory_hostname }}"
-  when: ansible_hostname == default_hostname
+  when: ansible_facts['hostname'] == default_hostname
 
 - name: "Install 'epel-relase' on RHEL-based distributions"
   #TODO: Why not let other modules decide if they need epel or not?
